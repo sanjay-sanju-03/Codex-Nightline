@@ -26,59 +26,7 @@ export default function Home() {
 
   useEffect(() => {
     getLogs()
-      .then(async (fetched) => {
-        if (fetched.length === 0) {
-          // Pre-populate with three realistic demo records for a polished visual presentation
-          const now = new Date().toISOString();
-          const seedData: WorkLog[] = [
-            {
-              id: "seed-1",
-              employer_name: "Suresh",
-              hours_worked: 8,
-              amount_paid: 500,
-              amount_pending: 200,
-              work_date: new Date(Date.now() - 86400000).toISOString().slice(0, 10),
-              notes: "Construction work log",
-              source_transcript: "Worked 8 hours for Suresh today. Received 500 rupees. 200 still pending.",
-              verification_status: "worker_confirmed",
-              created_at: now,
-              updated_at: now,
-            },
-            {
-              id: "seed-2",
-              employer_name: "Anil",
-              hours_worked: 6,
-              amount_paid: 600,
-              amount_pending: 0,
-              work_date: new Date(Date.now() - 172800000).toISOString().slice(0, 10),
-              notes: "Painting log",
-              source_transcript: "Worked 6 hours for Anil. Paid in full.",
-              verification_status: "worker_confirmed",
-              created_at: now,
-              updated_at: now,
-            },
-            {
-              id: "seed-3",
-              employer_name: "Rajesh",
-              hours_worked: 10,
-              amount_paid: 700,
-              amount_pending: 300,
-              work_date: new Date(Date.now() - 259200000).toISOString().slice(0, 10),
-              notes: "Material transport",
-              source_transcript: "Worked 10 hours for Rajesh today. Got 700 rupees. 300 pending.",
-              verification_status: "worker_confirmed",
-              created_at: now,
-              updated_at: now,
-            },
-          ];
-          for (const log of seedData) {
-            await putLog(log);
-          }
-          setLogs(seedData);
-        } else {
-          setLogs(fetched);
-        }
-      })
+      .then(setLogs)
       .catch(() => setError("Local storage is unavailable in this browser."));
   }, []);
 
@@ -100,6 +48,60 @@ export default function Home() {
     }
     return "All logged jobs are fully paid. Good job keeping your ledger balanced!";
   }, [logs, totals.pending]);
+
+  // Load demo seed data manually when clicked in the empty state
+  async function loadDemoData() {
+    const now = new Date().toISOString();
+    const seedData: WorkLog[] = [
+      {
+        id: "seed-1",
+        employer_name: "Suresh",
+        hours_worked: 8,
+        amount_paid: 500,
+        amount_pending: 200,
+        work_date: new Date(Date.now() - 86400000).toISOString().slice(0, 10),
+        notes: "Construction work log",
+        source_transcript: "Worked 8 hours for Suresh today. Received 500 rupees. 200 still pending.",
+        verification_status: "worker_confirmed",
+        created_at: now,
+        updated_at: now,
+      },
+      {
+        id: "seed-2",
+        employer_name: "Anil",
+        hours_worked: 6,
+        amount_paid: 600,
+        amount_pending: 0,
+        work_date: new Date(Date.now() - 172800000).toISOString().slice(0, 10),
+        notes: "Painting log",
+        source_transcript: "Worked 6 hours for Anil. Paid in full.",
+        verification_status: "worker_confirmed",
+        created_at: now,
+        updated_at: now,
+      },
+      {
+        id: "seed-3",
+        employer_name: "Rajesh",
+        hours_worked: 10,
+        amount_paid: 700,
+        amount_pending: 300,
+        work_date: new Date(Date.now() - 259200000).toISOString().slice(0, 10),
+        notes: "Material transport",
+        source_transcript: "Worked 10 hours for Rajesh today. Got 700 rupees. 300 pending.",
+        verification_status: "worker_confirmed",
+        created_at: now,
+        updated_at: now,
+      },
+    ];
+    try {
+      for (const log of seedData) {
+        await putLog(log);
+      }
+      setLogs(seedData);
+    } catch {
+      setError("We could not load demo data. Try again.");
+    }
+  }
 
   function startProgressMessages() {
     let step = 0;
@@ -217,7 +219,7 @@ export default function Home() {
             </div>
             <div className="actions">
               <button className="action primary" disabled={saving} onClick={save} type="button">
-                <Check size={18} /> {saving ? "Saving…" : "Keep record"}
+                <Check size={18} /> {saving ? "Saving…" : "Save to my ledger"}
               </button>
               <button className="action" disabled={saving} onClick={() => { setDraft(null); setTranscript(""); }} type="button">
                 Discard
@@ -250,6 +252,9 @@ export default function Home() {
             <div className="empty-state">
               <p className="empty-title">Your work history starts here</p>
               <p className="empty-sub">Record today&apos;s work to build a personal work ledger.</p>
+              <button className="action" style={{ marginTop: "1rem", width: "100%" }} onClick={loadDemoData} type="button">
+                Load Demo Data
+              </button>
             </div>
           ) : (
             <ul>
