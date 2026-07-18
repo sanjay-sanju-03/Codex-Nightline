@@ -10,4 +10,14 @@ export const draftSchema = z.object({
   verification_status: z.literal("draft"),
 });
 
-export const extractionSchema = draftSchema.omit({ verification_status: true }).extend({ needs_review: z.boolean() });
+// Lenient schema for raw GPT output — .catch() means unexpected formats
+// ("today", "₹500", "8 hrs") never throw; normalization cleans them up.
+export const extractionSchema = z.object({
+  employer_name: z.string().catch("Unknown"),
+  hours_worked: z.coerce.number().finite().min(0).max(24).catch(0),
+  amount_paid: z.coerce.number().finite().min(0).catch(0),
+  amount_pending: z.coerce.number().finite().min(0).catch(0),
+  work_date: z.string().catch(""),
+  notes: z.string().max(500).catch(""),
+  needs_review: z.boolean().catch(true),
+});
