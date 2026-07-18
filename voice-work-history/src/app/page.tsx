@@ -11,10 +11,12 @@ import {
   Share2,
   ShieldCheck,
   Sparkles,
+  Moon,
+  Sun,
   Trash2,
   WalletCards,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { VoiceRecorder } from "@/components/voice-recorder";
 import { deleteLog, getLogs, putLog } from "@/lib/work-log-db";
 import type { ParseResponse, WorkLog, WorkLogDraft } from "@/types/work-log";
@@ -26,8 +28,26 @@ const PROCESSING_STEPS = [
 ];
 
 const formatMoney = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
+type Theme = "light" | "dark";
+const THEME_CHANGE_EVENT = "shram-ledger-theme-change";
+
+function getThemeSnapshot(): Theme {
+  const savedTheme = window.localStorage.getItem("shram-ledger-theme");
+  if (savedTheme === "dark" || savedTheme === "light") return savedTheme;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function subscribeToTheme(callback: () => void) {
+  window.addEventListener("storage", callback);
+  window.addEventListener(THEME_CHANGE_EVENT, callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener(THEME_CHANGE_EVENT, callback);
+  };
+}
 
 export default function Home() {
+  const theme = useSyncExternalStore(subscribeToTheme, getThemeSnapshot, () => "light");
   const [draft, setDraft] = useState<WorkLogDraft | null>(null);
   const [transcript, setTranscript] = useState("");
   const [logs, setLogs] = useState<WorkLog[]>([]);
@@ -49,6 +69,17 @@ export default function Home() {
       if (stepTimer.current) clearInterval(stepTimer.current);
     };
   }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+
+  function toggleTheme() {
+    const nextTheme = theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = nextTheme;
+    window.localStorage.setItem("shram-ledger-theme", nextTheme);
+    window.dispatchEvent(new Event(THEME_CHANGE_EVENT));
+  }
 
   const totals = useMemo(
     () => logs.reduce(
@@ -206,7 +237,13 @@ export default function Home() {
               <p className="brand-caption">Your work, in your words</p>
             </div>
           </div>
-          <div className="privacy-pill"><ShieldCheck size={15} /> Local-first</div>
+          <div className="topbar-actions">
+            <div className="privacy-pill"><ShieldCheck size={15} /> Local-first</div>
+            <button className="theme-toggle" onClick={toggleTheme} type="button" aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}>
+              {theme === "light" ? <Moon size={17} /> : <Sun size={17} />}
+              <span>{theme === "light" ? "Dark" : "Light"}</span>
+            </button>
+          </div>
         </header>
 
         <section className="hero-copy">
