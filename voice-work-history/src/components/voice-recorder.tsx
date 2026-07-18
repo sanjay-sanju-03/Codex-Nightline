@@ -20,5 +20,28 @@ export function VoiceRecorder({ disabled, onReady, onError }: Props) {
       next.start(); setRecording(true);
     } catch { onError("Microphone access is needed. Check browser permissions and try again."); }
   }
-  return recording ? <button className="action danger" onClick={() => recorder.current?.stop()} type="button"><Square size={18} /> Stop recording</button> : <button aria-label="Start recording work note" className="record" disabled={disabled} onClick={start} type="button"><Mic size={36} /> Tap to record today&apos;s work</button>;
+  return (
+    <div className="record-wrapper">
+      {recording ? (
+        <button
+          aria-label="Stop recording work note"
+          className="record danger"
+          onClick={() => recorder.current?.stop()}
+          type="button"
+        >
+          <Square size={32} fill="white" />
+        </button>
+      ) : (
+        <button
+          aria-label="Start recording work note"
+          className="record"
+          disabled={disabled}
+          onClick={start}
+          type="button"
+        >
+          <Mic size={36} />
+        </button>
+      )}
+    </div>
+  );
 }
