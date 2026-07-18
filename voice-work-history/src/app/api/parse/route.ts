@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     if (!content) throw new Error("Empty extraction");
     return NextResponse.json({ success: true, transcript: transcription.text, ...normalizeExtraction(JSON.parse(content)), usedFallback: false });
   } catch (error) {
-    console.error("parse request failed", error instanceof Error ? error.name : "unknown");
+    console.error("parse request failed", error instanceof Error ? error.message : String(error));
     return NextResponse.json({ error: { message: "We could not process this recording. No work record was saved." } }, { status: 502 });
   }
 }
