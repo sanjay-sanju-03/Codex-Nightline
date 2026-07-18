@@ -3,7 +3,7 @@
 | Field | Value |
 | --- | --- |
 | Version | 1.0.0 |
-| Status | Draft â€” hackathon build specification |
+| Status | Draft — hackathon build specification |
 | Author | Sanjay K P |
 | Date | July 2026 |
 | Hackathon | Codex Nightline / OpenAI Build Week Community Hackathon |
@@ -18,7 +18,7 @@
 
 ## 1. Executive Summary
 
-Voice Work History MVP helps an informal worker turn a short spoken work summary into an editable, locally saved work record. The worker records a voice note such as: â€œRajeshinu vendi innu 8 manikkur joli cheythu. â‚¹500 kitti. â‚¹400 baki und.â€ The system transcribes it, extracts work details, shows them for review, and saves the record only after the worker confirms it.
+Voice Work History MVP helps an informal worker turn a short spoken work summary into an editable, locally saved work record. The worker records a voice note such as: “Rajeshinu vendi innu 8 manikkur joli cheythu. ₹500 kitti. ₹400 baki und.” The system transcribes it, extracts work details, shows them for review, and saves the record only after the worker confirms it.
 
 The core experience is deliberately small:
 
@@ -37,7 +37,7 @@ This MVP explores a narrow problem: **can a spoken daily summary become a clear,
 
 ### Opportunity
 
-Voice is a familiar mobile interaction. A voice-first flow can reduce data-entry effort, while a review screen ensures that an AI suggestion never becomes a stored fact without the workerâ€™s approval.
+Voice is a familiar mobile interaction. A voice-first flow can reduce data-entry effort, while a review screen ensures that an AI suggestion never becomes a stored fact without the worker’s approval.
 
 ### Competitive Positioning
 
@@ -56,7 +56,7 @@ e-Shram is a complementary public registration system, not a competitor or a pro
 2. **Human verified.** The worker always has the final say before a record is saved.
 3. **AI assists; humans decide.** AI proposes a structured draft, never an authoritative employment fact.
 4. **Simple before smart.** A dependable single flow is more valuable than feature breadth.
-5. **Local first.** Confirmed records remain on the workerâ€™s device in the MVP.
+5. **Local first.** Confirmed records remain on the worker’s device in the MVP.
 6. **Transparent by default.** Show the transcript and editable fields so users can understand what is being saved.
 
 ## 4. AI Principles
@@ -65,7 +65,7 @@ e-Shram is a complementary public registration system, not a competitor or a pro
 - Every model output is schema-validated before reaching the UI.
 - Every parsed value is editable before confirmation.
 - The worker owns the final saved record and can delete it.
-- The product does not display a generated â€œreliability scoreâ€ as a factual measure.
+- The product does not display a generated “reliability score” as a factual measure.
 - Raw audio is not retained after processing, except in temporary in-memory/session retry handling.
 - The model receives only the submitted audio/transcript and the extraction instructions required for that request.
 
@@ -148,13 +148,13 @@ Workers will voluntarily record their daily work using voice if it takes under 2
 
 ```text
 Idle
-  â†’ Recording
-  â†’ Uploading
-  â†’ Processing
-  â†’ Needs Review
-  â†’ Confirmed
-  â†’ Saved
-  â†’ History
+  → Recording
+  → Uploading
+  → Processing
+  → Needs Review
+  → Confirmed
+  → Saved
+  → History
 ```
 
 ### States and transitions
@@ -176,7 +176,7 @@ Idle
 - Cancelling during recording stops all audio tracks and removes the unsaved Blob.
 - Cancelling during processing prevents the client from saving a late response; the server request may complete but its result is ignored.
 - A failed parse never creates a persistent record.
-- A fallback result is labelled â€œDemo fallback â€” review before savingâ€ and still requires confirmation.
+- A fallback result is labelled “Demo fallback — review before saving” and still requires confirmation.
 - Any reviewable draft can be discarded without changing history.
 
 ## 9. UX Specification
@@ -184,28 +184,28 @@ Idle
 ### Screen layout
 
 ```text
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ Voice Work History                   â”‚
-â”‚ Speak it. Review it. Keep it.        â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚             [ Microphone ]           â”‚
-â”‚       Tap to record todayâ€™s work      â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ Transcript                            â”‚
-â”‚ â€œ...â€                                 â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ Review work record                    â”‚
-â”‚ Employer       [ Rajesh             ] â”‚
-â”‚ Hours worked   [ 8                  ] â”‚
-â”‚ Paid           [ â‚¹500               ] â”‚
-â”‚ Pending        [ â‚¹400               ] â”‚
-â”‚ Date           [ 18 Jul 2026        ] â”‚
-â”‚ [Discard]                [Confirm]   â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ Total hours 42   Paid â‚¹18,400         â”‚
-â”‚ Pending â‚¹1,200                        â”‚
-â”‚ Recent work history                   â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────┐
+│ Voice Work History                   │
+│ Speak it. Review it. Keep it.        │
+├─────────────────────────────────────┤
+│             [ Microphone ]           │
+│       Tap to record today’s work      │
+├─────────────────────────────────────┤
+│ Transcript                            │
+│ “...”                                 │
+├─────────────────────────────────────┤
+│ Review work record                    │
+│ Employer       [ Rajesh             ] │
+│ Hours worked   [ 8                  ] │
+│ Paid           [ ₹500               ] │
+│ Pending        [ ₹400               ] │
+│ Date           [ 18 Jul 2026        ] │
+│ [Discard]                [Confirm]   │
+├─────────────────────────────────────┤
+│ Total hours 42   Paid ₹18,400         │
+│ Pending ₹1,200                        │
+│ Recent work history                   │
+└─────────────────────────────────────┘
 ```
 
 ### Required UI states and messages
@@ -224,7 +224,7 @@ Idle
 
 ### Accessibility requirements
 
-- Minimum 44 Ã— 44 px interactive targets.
+- Minimum 44 × 44 px interactive targets.
 - High-contrast colors and readable sans-serif typography.
 - A visible text label for all icons and status colors.
 - Keyboard-operable controls and visible focus states.
@@ -333,23 +333,23 @@ src/
 
 ```text
 MediaRecorder
-  â†“ audio Blob
+  ↓ audio Blob
 FormData
-  â†“
+  ↓
 POST /api/parse
-  â†“
+  ↓
 Transcription Service
-  â†“ transcript
+  ↓ transcript
 Extraction Service
-  â†“ structured candidate
+  ↓ structured candidate
 Normalization Service
-  â†“ normalized candidate
+  ↓ normalized candidate
 Validation Service
-  â†“ validated draft
+  ↓ validated draft
 Response Builder
-  â†“
+  ↓
 Client review/edit
-  â†“ user confirms
+  ↓ user confirms
 IndexedDB
 ```
 
@@ -399,17 +399,17 @@ IndexedDB
 
 ```text
 Voice
-  â†“
+  ↓
 Temporary Blob in browser memory/session retry storage
-  â†“
+  ↓
 Server processing
-  â†“
+  ↓
 Transcript and structured draft
-  â†“
+  ↓
 Worker review/edit
-  â†“
+  ↓
 Worker-confirmed record in IndexedDB
-  â†“
+  ↓
 User-initiated permanent deletion
 ```
 
@@ -505,7 +505,7 @@ Content-Type: multipart/form-data
 ### Prompt version 1.0
 
 ```text
-You extract a daily work record from a workerâ€™s spoken transcript.
+You extract a daily work record from a worker’s spoken transcript.
 Return only data that is stated or directly implied by the transcript.
 Do not invent employer names, dates, hours, wages, or pending amounts.
 Use 0 for missing numeric amounts and "Unknown" for a missing employer name.
@@ -544,7 +544,7 @@ Return JSON matching the supplied schema exactly.
 
 1. Strip whitespace and control characters from text fields.
 2. Convert culturally formatted numeric values to finite numbers; reject negative values.
-3. Clamp hours to 0â€“24; mark review when clamping or defaulting occurs.
+3. Clamp hours to 0–24; mark review when clamping or defaulting occurs.
 4. Convert a missing date to the device-local date and set `needsReview`.
 5. Do not derive a wage from hours, or pending amount from paid amount.
 6. Preserve the original transcript separately for the worker to inspect.
@@ -715,19 +715,19 @@ Model names must remain configurable. Before the sprint demo, verify that the se
 
 ### 90-second pitch
 
-**Opening, 20 seconds:** â€œMillions of informal workers need a simple way to remember work completed, money paid, and money still pending. We asked one focused question: can a 20-second voice note become a trustworthy work record?â€
+**Opening, 20 seconds:** “Millions of informal workers need a simple way to remember work completed, money paid, and money still pending. We asked one focused question: can a 20-second voice note become a trustworthy work record?”
 
 **Demo, 45 seconds:** Record a natural Malayalam/Manglish work note. Show the transcript, structured fields, edit one value if useful, confirm, and show the ledger totals/history update.
 
-**AI explanation, 10 seconds:** â€œThe system transcribes the spoken note, extracts a structured draft, and requires the worker to confirm it before anything is saved.â€
+**AI explanation, 10 seconds:** “The system transcribes the spoken note, extracts a structured draft, and requires the worker to confirm it before anything is saved.”
 
-**Close, 15 seconds:** â€œToday this is a worker-owned, voice-to-record experiment. If it proves useful, an editable daily work history could eventually support better employment records and opportunitiesâ€”without claiming that outcome today.â€
+**Close, 15 seconds:** “Today this is a worker-owned, voice-to-record experiment. If it proves useful, an editable daily work history could eventually support better employment records and opportunities—without claiming that outcome today.”
 
 ### Prepared demo input
 
-> â€œRajeshinu vendi innu 8 manikkur joli cheythu. â‚¹500 kitti. â‚¹400 baki und.â€
+> “Rajeshinu vendi innu 8 manikkur joli cheythu. ₹500 kitti. ₹400 baki und.”
 
-Expected review draft: Employer Rajesh; Hours 8; Paid â‚¹500; Pending â‚¹400; current date; `needsReview: false` if all values are clear.
+Expected review draft: Employer Rajesh; Hours 8; Paid ₹500; Pending ₹400; current date; `needsReview: false` if all values are clear.
 
 ### Pre-demo checklist
 
@@ -768,7 +768,7 @@ Expected review draft: Employer Rajesh; Hours 8; Paid â‚¹500; Pending â‚�
 
 | Phase | Focus |
 | --- | --- |
-| 1: Hackathon | Voice â†’ review â†’ local ledger |
+| 1: Hackathon | Voice → review → local ledger |
 | 2: Pilot | Test language, edit rate, repeated use, and consent needs |
 | 3: Optional cloud sync | User-controlled backup and cross-device access |
 | 4: Optional employer verification | Only after worker/contractor workflow research |
@@ -788,12 +788,12 @@ Expected review draft: Employer Rajesh; Hours 8; Paid â‚¹500; Pending â‚�
 
 | Time allocation | Outcome |
 | --- | --- |
-| 0â€“15 min | Scaffold project, environment variables, design shell |
-| 15â€“50 min | Recorder and one server parse pipeline work with prepared input |
-| 50â€“75 min | Review/edit, confirmation, IndexedDB, totals/history |
-| 75â€“95 min | Error UX, deterministic fallback, mobile visual polish |
-| 95â€“110 min | Test production deployment and backup recording |
-| 110â€“120 min | Rehearse pitch, verify fallback, submit |
+| 0–15 min | Scaffold project, environment variables, design shell |
+| 15–50 min | Recorder and one server parse pipeline work with prepared input |
+| 50–75 min | Review/edit, confirmation, IndexedDB, totals/history |
+| 75–95 min | Error UX, deterministic fallback, mobile visual polish |
+| 95–110 min | Test production deployment and backup recording |
+| 110–120 min | Rehearse pitch, verify fallback, submit |
 
 ## Appendix A: Glossary
 
@@ -808,5 +808,4 @@ Expected review draft: Employer Rajesh; Hours 8; Paid â‚¹500; Pending â‚�
 - Official e-Shram information for any statement about its purpose or scope.
 - Official OpenAI API documentation for configured transcription and structured-output model support.
 - Consent and privacy guidance appropriate to any future pilot or user-data collection.
-
 
