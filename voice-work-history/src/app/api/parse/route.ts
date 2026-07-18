@@ -4,7 +4,7 @@ import { normalizeExtraction } from "@/services/normalization";
 
 export const runtime = "nodejs";
 
-const fallback = { employer_name: "Rajesh", hours_worked: 8, amount_paid: 500, amount_pending: 400, work_date: "", notes: "Demo fallback", needs_review: true };
+const fallback = { employer_name: "Rajesh", hours_worked: 8, amount_paid: 500, amount_pending: 400, work_date: new Date().toISOString().slice(0, 10), notes: "Demo fallback", needs_review: true };
 
 export async function POST(request: Request) {
   try {
