@@ -28,6 +28,10 @@
 - **Offline:** Works without internet; demo fallback fires when no API key is set
 - **Deployment:** Vercel-ready
 
+## Latest MVP Update
+
+The ledger now includes a weekly snapshot, optional local follow-up dates for pending payments, and a share/copy flow for worker-confirmed records. These features remain local-first and do not add employer contact, verification, or cloud storage.
+
 ## Status
 
 MVP built. Spec frozen. Moving to demo rehearsal.

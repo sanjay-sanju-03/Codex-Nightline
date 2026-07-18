@@ -795,6 +795,12 @@ Expected review draft: Employer Rajesh; Hours 8; Paid ₹500; Pending ₹400; cu
 | 95–110 min | Test production deployment and backup recording |
 | 110–120 min | Rehearse pitch, verify fallback, submit |
 
+## 26. Implemented Wage-Management Extensions
+
+- **Pending-payment follow-up:** Workers can attach an optional local follow-up date to a confirmed record with a pending amount. It does not send a notification or contact anyone.
+- **Weekly snapshot:** The app calculates current-week confirmed hours, paid amount, and pending amount from IndexedDB records.
+- **Shareable work record:** The app shares or copies a text summary explicitly marked `worker-confirmed`; it never claims external verification.
+
 ## Appendix A: Glossary
 
 - **Draft:** AI-assisted, editable work record that has not been saved.

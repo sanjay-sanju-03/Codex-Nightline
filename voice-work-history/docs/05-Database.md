@@ -29,6 +29,14 @@ type WorkLog = {
 }
 ```
 
+### Optional Wage-Management Field
+
+```typescript
+follow_up_date?: string; // local YYYY-MM-DD date, only for a pending payment
+```
+
+This value is optional, does not create a notification, and is not sent to an employer or server.
+
 ## WorkLogDraft Schema (before confirmation)
 
 ```typescript

@@ -48,6 +48,14 @@ A daily-wage worker in India who:
 
 ---
 
+## Wage-Management Extensions (Built)
+
+| Feature | Behavior | Boundary |
+|---|---|---|
+| Weekly snapshot | Calculates current-week hours, paid amount, and pending amount from confirmed local records | Not a financial statement |
+| Pending follow-up | Saves an optional local date when an amount remains pending | Does not send a reminder or contact an employer |
+| Shareable record | Shares/copies a text summary marked `Worker-confirmed` | Not employer or external verification |
+
 ## Deliberately Out of Scope
 
 To preserve focus and validate one hypothesis, the MVP intentionally excludes:

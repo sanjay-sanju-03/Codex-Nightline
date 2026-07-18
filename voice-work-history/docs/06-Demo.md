@@ -47,6 +47,11 @@ Point to the totals strip.
 
 > "At the end of the week, they can show an employer exactly what they worked and what's outstanding. That's the record that doesn't exist today."
 
+### Step 6 — Show practical next actions (8 seconds)
+Point to the weekly snapshot and set a local follow-up date for a pending payment. Then share a saved record.
+
+> "This is not only a saved entry. The worker can see this week’s total, remember when to follow up, and share a worker-confirmed summary they control."
+
 ### Close (5 seconds)
 > "Voice Work History. Speak it. Review it. Keep it."
 

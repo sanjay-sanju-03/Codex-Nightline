@@ -14,6 +14,7 @@ export type WorkLog = Omit<WorkLogDraft, "verification_status"> & {
   verification_status: "worker_confirmed";
   created_at: string;
   updated_at: string;
+  follow_up_date?: string;
 };
 
 export type ParseResponse = {

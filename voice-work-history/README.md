@@ -35,6 +35,13 @@ Technology should reduce friction — not reduce ownership. We believe AI is a f
 
 ---
 
+## Latest MVP Feature Update
+
+- **Weekly Snapshot:** Shows confirmed hours, paid amount, and pending amount for the current week.
+- **Pending-Payment Follow-up:** A worker can add an optional local follow-up date to a record with money pending.
+- **Shareable Work Record:** A worker-confirmed summary opens the device share sheet, with copy-to-clipboard fallback.
+- **Accurate resilience claim:** Live Whisper/GPT parsing needs internet. If parsing fails after the app has loaded, the client supplies a clearly labelled local demo fallback so the review and save flow can still be demonstrated.
+
 ## Design Principles
 
 - 🎙 **Voice-first** — Low barrier of entry for varying literacy levels.

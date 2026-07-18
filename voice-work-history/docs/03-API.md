@@ -56,6 +56,10 @@ Set to `true` when any of:
 
 The UI does not currently surface this flag visually — all drafts go through manual review by design.
 
+### Client-Only Extensions
+
+Weekly totals, follow-up dates, and sharing operate only on confirmed IndexedDB records. They do not change the `POST /api/parse` contract.
+
 ### Environment Variables
 
 | Variable | Default | Purpose |

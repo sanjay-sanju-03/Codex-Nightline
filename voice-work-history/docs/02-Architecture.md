@@ -71,6 +71,17 @@ putLog(WorkLog) → IndexedDB
 Page re-renders with updated list + totals
 ```
 
+## Wage-Management Data Flow
+
+```text
+Confirmed WorkLog in IndexedDB
+  → weekly reducer → current-week summary
+  → optional follow_up_date → history label
+  → Web Share API or clipboard → worker-confirmed text summary
+```
+
+The feature layer is client-only. It makes no new server request and does not create notifications, messages, or third-party records.
+
 ## Constraints
 
 | Constraint | Value |

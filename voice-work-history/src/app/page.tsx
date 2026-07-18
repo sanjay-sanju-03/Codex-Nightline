@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Trash2 } from "lucide-react";
+import { CalendarClock, Check, Share2, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { VoiceRecorder } from "@/components/voice-recorder";
 import { deleteLog, getLogs, putLog } from "@/lib/work-log-db";
@@ -22,6 +22,7 @@ export default function Home() {
   const [processing, setProcessing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [followUpDate, setFollowUpDate] = useState("");
   const stepTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -37,6 +38,17 @@ export default function Home() {
     ),
     [logs]
   );
+
+  const weeklyTotals = useMemo(() => {
+    const today = new Date();
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+    const weekStart = monday.toISOString().slice(0, 10);
+    return logs.filter((log) => log.work_date >= weekStart).reduce(
+      (sum, log) => ({ hours: sum.hours + log.hours_worked, paid: sum.paid + log.amount_paid, pending: sum.pending + log.amount_pending }),
+      { hours: 0, paid: 0, pending: 0 },
+    );
+  }, [logs]);
 
   // Generate dynamic, useful assistant insights client-side using current logs
   const aiInsight = useMemo(() => {
@@ -167,12 +179,14 @@ export default function Home() {
       verification_status: "worker_confirmed",
       created_at: now,
       updated_at: now,
+      follow_up_date: draft.amount_pending > 0 && followUpDate ? followUpDate : undefined,
     };
     try {
       await putLog(log);
       setLogs((current) => [log, ...current]);
       setDraft(null);
       setTranscript("");
+      setFollowUpDate("");
       setSaved(true);
       setMessage("Ready to record a short work note.");
       setTimeout(() => setSaved(false), 3000);
@@ -185,6 +199,17 @@ export default function Home() {
 
   function update<K extends keyof WorkLogDraft>(key: K, value: WorkLogDraft[K]) {
     if (draft) setDraft({ ...draft, [key]: value });
+  }
+
+  async function shareLog(log: WorkLog) {
+    const text = `Voice Work History\nWorker-confirmed record\nEmployer: ${log.employer_name}\nHours: ${log.hours_worked}\nPaid: ₹${log.amount_paid}\nPending: ₹${log.amount_pending}\nDate: ${log.work_date}`;
+    try {
+      if (navigator.share) await navigator.share({ title: "Work record", text });
+      else { await navigator.clipboard.writeText(text); setMessage("Work record copied to your clipboard."); }
+    } catch (caught) {
+      if (caught instanceof DOMException && caught.name === "AbortError") return;
+      setError("We could not share this record. Try copying it again.");
+    }
   }
 
   return (
@@ -230,6 +255,12 @@ export default function Home() {
                 </label>
               ))}
             </div>
+            {draft.amount_pending > 0 && (
+              <label className="follow-up-field">
+                <CalendarClock size={18} /> Follow up about this pending payment on
+                <input type="date" value={followUpDate} onChange={(event) => setFollowUpDate(event.target.value)} />
+              </label>
+            )}
             <div className="actions">
               <button className="action primary" disabled={saving} onClick={save} type="button">
                 <Check size={18} /> {saving ? "Saving…" : "Save to my ledger"}
@@ -258,6 +289,12 @@ export default function Home() {
           ))}
         </section>
 
+        <section className="week-summary">
+          <p>This week</p>
+          <strong>{weeklyTotals.hours} hours</strong>
+          <span>₹{weeklyTotals.paid} paid · ₹{weeklyTotals.pending} pending</span>
+        </section>
+
         {/* History */}
         <section className="panel">
           <h2>My work history</h2>
@@ -276,7 +313,9 @@ export default function Home() {
                   <div>
                     <strong>{log.employer_name} · {log.hours_worked} hours</strong>
                     <span>Paid ₹{log.amount_paid} · Pending ₹{log.amount_pending} · {log.work_date}</span>
+                    {log.follow_up_date && log.amount_pending > 0 && <span className="follow-up-note">Follow up: {log.follow_up_date}</span>}
                   </div>
+                  <button aria-label={`Share record for ${log.employer_name}`} onClick={() => shareLog(log)} type="button"><Share2 size={18} /></button>
                   <button
                     aria-label={`Delete record for ${log.employer_name}`}
                     onClick={() => deleteLog(log.id).then(() => setLogs((current) => current.filter((item) => item.id !== log.id)))}
