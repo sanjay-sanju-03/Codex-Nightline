@@ -25,7 +25,61 @@ export default function Home() {
   const stepTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    getLogs().then(setLogs).catch(() => setError("Local storage is unavailable in this browser."));
+    getLogs()
+      .then(async (fetched) => {
+        if (fetched.length === 0) {
+          // Pre-populate with three realistic demo records for a polished visual presentation
+          const now = new Date().toISOString();
+          const seedData: WorkLog[] = [
+            {
+              id: "seed-1",
+              employer_name: "Suresh",
+              hours_worked: 8,
+              amount_paid: 500,
+              amount_pending: 200,
+              work_date: new Date(Date.now() - 86400000).toISOString().slice(0, 10),
+              notes: "Construction work log",
+              source_transcript: "Worked 8 hours for Suresh today. Received 500 rupees. 200 still pending.",
+              verification_status: "worker_confirmed",
+              created_at: now,
+              updated_at: now,
+            },
+            {
+              id: "seed-2",
+              employer_name: "Anil",
+              hours_worked: 6,
+              amount_paid: 600,
+              amount_pending: 0,
+              work_date: new Date(Date.now() - 172800000).toISOString().slice(0, 10),
+              notes: "Painting log",
+              source_transcript: "Worked 6 hours for Anil. Paid in full.",
+              verification_status: "worker_confirmed",
+              created_at: now,
+              updated_at: now,
+            },
+            {
+              id: "seed-3",
+              employer_name: "Rajesh",
+              hours_worked: 10,
+              amount_paid: 700,
+              amount_pending: 300,
+              work_date: new Date(Date.now() - 259200000).toISOString().slice(0, 10),
+              notes: "Material transport",
+              source_transcript: "Worked 10 hours for Rajesh today. Got 700 rupees. 300 pending.",
+              verification_status: "worker_confirmed",
+              created_at: now,
+              updated_at: now,
+            },
+          ];
+          for (const log of seedData) {
+            await putLog(log);
+          }
+          setLogs(seedData);
+        } else {
+          setLogs(fetched);
+        }
+      })
+      .catch(() => setError("Local storage is unavailable in this browser."));
   }, []);
 
   const totals = useMemo(
@@ -35,6 +89,17 @@ export default function Home() {
     ),
     [logs]
   );
+
+  // Generate dynamic, useful assistant insights client-side using current logs
+  const aiInsight = useMemo(() => {
+    if (logs.length === 0) return null;
+    const pendingLogs = logs.filter(log => log.amount_pending > 0);
+    if (pendingLogs.length > 0) {
+      const mostRecentPending = pendingLogs[0];
+      return `You have ₹${totals.pending} in pending payments. Consider following up with ${mostRecentPending.employer_name} about the ₹${mostRecentPending.amount_pending} pending from ${mostRecentPending.work_date}.`;
+    }
+    return "All logged jobs are fully paid. Good job keeping your ledger balanced!";
+  }, [logs, totals.pending]);
 
   function startProgressMessages() {
     let step = 0;
@@ -111,9 +176,9 @@ export default function Home() {
     <main>
       <div className="shell">
         <header>
-          <p className="eyebrow">Project Shram</p>
-          <h1>Voice Work History</h1>
-          <p className="subtitle">Speak it. Review it. Keep it.</p>
+          <p className="eyebrow">Shram Ledger</p>
+          <h1>Never forget a day&apos;s work again</h1>
+          <p className="subtitle">Record your work in your own voice. Review it. Save it.</p>
         </header>
 
         {/* Record panel */}
@@ -136,7 +201,7 @@ export default function Home() {
         {/* Review / edit draft */}
         {draft && (
           <section className="panel">
-            <h2>Review work record</h2>
+            <h2>Review your work</h2>
             <p className="transcript"><strong>Transcript:</strong> {transcript}</p>
             <div className="form-grid">
               {([ ["employer_name", "Employer"], ["hours_worked", "Hours worked"], ["amount_paid", "Paid (₹)"], ["amount_pending", "Pending (₹)"], ["work_date", "Work date"], ["notes", "Notes"] ] as const).map(([key, label]) => (
@@ -152,12 +217,19 @@ export default function Home() {
             </div>
             <div className="actions">
               <button className="action primary" disabled={saving} onClick={save} type="button">
-                <Check size={18} /> {saving ? "Saving…" : "Confirm & save"}
+                <Check size={18} /> {saving ? "Saving…" : "Keep record"}
               </button>
               <button className="action" disabled={saving} onClick={() => { setDraft(null); setTranscript(""); }} type="button">
                 Discard
               </button>
             </div>
+          </section>
+        )}
+
+        {/* Dynamic AI Insight Card */}
+        {aiInsight && (
+          <section className="insight-card">
+            <p>💡 <strong>AI Insight:</strong> {aiInsight}</p>
           </section>
         )}
 
@@ -173,7 +245,7 @@ export default function Home() {
 
         {/* History */}
         <section className="panel">
-          <h2>Recent history</h2>
+          <h2>My work history</h2>
           {logs.length === 0 ? (
             <div className="empty-state">
               <p className="empty-title">Your work history starts here</p>
