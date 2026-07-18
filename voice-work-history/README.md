@@ -8,6 +8,22 @@ Built for **Codex Nightline — OpenAI Build Week Community Hackathon**.
 
 ---
 
+## Why Shram Ledger?
+
+Millions of informal workers in India rely on memory, paper notebooks, or scattered voice notes to remember who they worked for, how much they earned, and what payments are still pending. Notebooks get lost. Typing is too slow.
+
+Shram Ledger makes keeping a work record as simple as speaking. Workers record a short voice note, AI prepares a structured draft, and the worker confirms and saves it. 
+
+---
+
+## Product Philosophy
+
+> **AI extracts. The worker confirms.**
+
+Technology should reduce friction — not reduce ownership. We believe AI is a formatting layer, not a decision-maker. Shram Ledger puts the worker, not the AI, in absolute control of their own work history.
+
+---
+
 ## Key Features
 
 1. **Voice-to-Record** — Speak naturally for up to 20 seconds. Whisper transcribes and GPT-4o-mini extracts the key facts: employer, hours, paid amount, pending amount, date, and notes.
@@ -19,6 +35,30 @@ Built for **Codex Nightline — OpenAI Build Week Community Hackathon**.
 
 ---
 
+## Design Principles
+
+- 🎙 **Voice-first** — Low barrier of entry for varying literacy levels.
+- 👤 **Worker-verified** — Zero automation on the final record.
+- 🔒 **Privacy by default** — Local storage only, scoped entirely to the device.
+- 📱 **Offline-resilient** — The workflow never stalls when connection drops.
+- ⚡ **Zero-setup** — Instant usage without accounts or signups.
+
+---
+
+## AI Architecture
+
+```mermaid
+graph TD
+    Voice[Worker Voice Note] -->|Audio Blob| Whisper[Whisper-1 Speech-to-Text]
+    Whisper -->|Raw Transcript| GPT[GPT-4o-mini Extraction]
+    GPT -->|Unformatted JSON| Normalization[Normalization & Safeguards]
+    Normalization -->|Safe Draft| Review[Review & Edit Form]
+    Review -->|Save to Ledger| IndexedDB[(IndexedDB Local Storage)]
+    IndexedDB -->|Scan Dues| Insights[AI Insights Engine]
+```
+
+---
+
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router) + React 19 + TypeScript
@@ -26,6 +66,16 @@ Built for **Codex Nightline — OpenAI Build Week Community Hackathon**.
 - **Storage:** IndexedDB via `idb` — client-side persistence
 - **Validation:** Zod schemas for both parsing and database writing
 - **Deployment:** Vercel-ready
+
+---
+
+## Future Roadmap
+
+- 👥 **Employer verification** — Double-entry logs via local link sharing.
+- 🔄 **Optional cloud sync** — User-controlled encrypted backup.
+- 🗣 **Multilingual UI** — Audio visual feedback and prompts in regional languages.
+- 📊 **Credit ledger** — Exportable history to support micro-credit/loan applications.
+- 🔔 **Actionable notifications** — Direct SMS/WhatsApp payment follow-ups.
 
 ---
 
@@ -99,7 +149,7 @@ src/
 ├── components/
 │   └── voice-recorder.tsx   ← MediaRecorder lifecycle
 ├── services/
-│   └── normalization.ts     ← Date and number cleanups + crash safeguards
+│   └── normalization.ts     ← Date and number cleanups + safeguards
 ├── schemas/
 │   └── work-log.ts          ← draftSchema + extractionSchema
 ├── lib/
@@ -115,3 +165,9 @@ Full documentation is available in the [`docs/`](./docs/00-README.md) folder.
 ## Demo Script (90 seconds)
 
 See [`docs/06-Demo.md`](./docs/06-Demo.md) for the setup checklist, step-by-step narration, and Q&A prep.
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
