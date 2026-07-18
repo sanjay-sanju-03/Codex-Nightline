@@ -19,6 +19,10 @@
 
 ---
 
+## Contributor Playbooks
+
+The [`skills/`](./skills/README.md) folder contains focused guides for product philosophy, AI extraction, review, resilience, storage, API behavior, accessibility, testing, and demos.
+
 ## Tech Stack (at a glance)
 
 - **Framework:** Next.js 16 (App Router) + React 19 + TypeScript

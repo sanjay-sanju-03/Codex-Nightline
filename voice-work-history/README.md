@@ -165,7 +165,7 @@ src/
     └── work-log.ts          ← WorkLogDraft, WorkLog, ParseResponse
 ```
 
-Full documentation is available in the [`docs/`](./docs/00-README.md) folder.
+Full documentation is available in the [`docs/`](./docs/00-README.md) folder. Contributors and AI coding assistants should also read the focused [`docs/skills/`](./docs/skills/README.md) playbooks before changing a product area.
 
 ---
 
